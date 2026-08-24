@@ -68,6 +68,12 @@ class AudioHapticFeedbackManager(private val context: Context) : TextToSpeech.On
         }
 
         if (isTtsReady.get() && tts != null) {
+            // SURGICAL FIX: Prevent normal camera alerts from queuing up behind
+            // or interrupting ongoing long-form speech (e.g. Find Object responses).
+            if (!alert.requiresInterruption && tts?.isSpeaking == true) {
+                return
+            }
+
             val queueMode = if (alert.requiresInterruption) {
                 TextToSpeech.QUEUE_FLUSH
             } else {

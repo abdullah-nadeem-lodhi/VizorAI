@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -38,11 +41,14 @@ fun CameraViewfinder(
     isGuidanceActive: Boolean,
     trackedObjects: List<TrackedDetection>,
     pipeline: CameraVisionPipeline,
+    isFlashEnabled: Boolean = false,
+    onFlashSupportChanged: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
+    var cameraControl: androidx.camera.core.CameraControl? by remember { mutableStateOf(null) }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -81,12 +87,15 @@ fun CameraViewfinder(
 
                     try {
                         cameraProvider.unbindAll()
-                        cameraProvider.bindToLifecycle(
+                        val camera = cameraProvider.bindToLifecycle(
                             lifecycleOwner,
                             cameraSelector,
                             preview,
                             imageAnalysis
                         )
+                        val hasFlash = camera.cameraInfo.hasFlashUnit()
+                        onFlashSupportChanged(hasFlash)
+                        cameraControl = camera.cameraControl
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -94,6 +103,7 @@ fun CameraViewfinder(
 
                 previewView
             },
+            update = { _ -> cameraControl?.enableTorch(isFlashEnabled) },
             modifier = Modifier.fillMaxSize()
         )
 

@@ -1,5 +1,7 @@
 package com.example.ui
 
+import com.example.ui.components.KeepScreenOn
+
 import android.Manifest
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -77,6 +79,8 @@ fun CameraGuideScreen(
     state: GuidanceState,
     onToggleGuidance: () -> Unit,
     onToggleMute: () -> Unit,
+    onToggleFlash: () -> Unit,
+    onFlashSupportChanged: (Boolean) -> Unit,
     onEmergencyStop: () -> Unit,
     onDescribeSurroundings: () -> Unit,
     onVoiceCommand: () -> Unit = {},
@@ -98,10 +102,14 @@ fun CameraGuideScreen(
     }
 
     DisposableEffect(pipeline) {
+
+
         onDispose {
             pipeline?.close()
         }
     }
+
+    KeepScreenOn(isGuidanceActive = state.isGuidanceActive)
 
     Surface(
         modifier = Modifier
@@ -143,32 +151,56 @@ fun CameraGuideScreen(
                         )
                     }
 
-                    // Emergency Mute / Unmute Quick Control
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(if (state.isAudioMuted) SurfaceElevated else SurfaceBase)
-                            .border(1.dp, if (state.isAudioMuted) BorderStrong else BorderSubtle, RoundedCornerShape(8.dp))
-                            .clickable { onToggleMute() }
-                            .padding(horizontal = 12.dp, vertical = 8.dp)
-                            .testTag("mute_toggle_button")
-                            .semantics {
-                                contentDescription = if (state.isAudioMuted) "Audio is muted. Tap to unmute." else "Audio is active. Tap to mute."
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        if (state.isFlashSupported) {
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(if (state.isFlashEnabled) SurfaceBase else SurfaceElevated)
+                                    .border(1.dp, if (state.isFlashEnabled) BorderSubtle else BorderStrong, RoundedCornerShape(8.dp))
+                                    .clickable { onToggleFlash() }
+                                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                                    .semantics {
+                                        contentDescription = if (state.isFlashEnabled) "Flash is ON. Tap to turn OFF." else "Flash is OFF. Tap to turn ON."
+                                    }
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = if (state.isFlashEnabled) "FLASH ON" else "FLASH OFF",
+                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                        color = if (state.isFlashEnabled) TextPrimary else TextMuted
+                                    )
+                                }
                             }
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = if (state.isAudioMuted) Icons.AutoMirrored.Filled.VolumeMute else Icons.AutoMirrored.Filled.VolumeUp,
-                                contentDescription = null,
-                                tint = if (state.isAudioMuted) TextMuted else TextPrimary,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = if (state.isAudioMuted) "MUTED" else "VOICE ON",
-                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                color = if (state.isAudioMuted) TextMuted else TextPrimary
-                            )
+                        }
+
+                        // Emergency Mute / Unmute Quick Control
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(if (state.isAudioMuted) SurfaceElevated else SurfaceBase)
+                                .border(1.dp, if (state.isAudioMuted) BorderStrong else BorderSubtle, RoundedCornerShape(8.dp))
+                                .clickable { onToggleMute() }
+                                .padding(horizontal = 12.dp, vertical = 8.dp)
+                                .testTag("mute_toggle_button")
+                                .semantics {
+                                    contentDescription = if (state.isAudioMuted) "Audio is muted. Tap to unmute." else "Audio is active. Tap to mute."
+                                }
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = if (state.isAudioMuted) Icons.AutoMirrored.Filled.VolumeMute else Icons.AutoMirrored.Filled.VolumeUp,
+                                    contentDescription = null,
+                                    tint = if (state.isAudioMuted) TextMuted else TextPrimary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = if (state.isAudioMuted) "MUTED" else "VOICE ON",
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = if (state.isAudioMuted) TextMuted else TextPrimary
+                                )
+                            }
                         }
                     }
                 }
@@ -193,6 +225,8 @@ fun CameraGuideScreen(
                         isGuidanceActive = state.isGuidanceActive,
                         trackedObjects = state.trackedObjects,
                         pipeline = pipeline,
+                        isFlashEnabled = state.isFlashEnabled,
+                        onFlashSupportChanged = onFlashSupportChanged,
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {

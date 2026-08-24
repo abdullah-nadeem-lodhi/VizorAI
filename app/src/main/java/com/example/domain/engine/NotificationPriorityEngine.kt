@@ -113,7 +113,7 @@ class NotificationPriorityEngine {
         }
 
         // Pacing guard: prevent back-to-back rapid chatter
-        if (elapsed < (cooldown / 2) && !isImmediateHazard && !hasMeaningfulStateChange) {
+        if (elapsed < (cooldown / 2) && !isImmediateHazard) {
             return null
         }
 

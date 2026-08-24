@@ -102,5 +102,7 @@ data class GuidanceState(
     val sceneDescriptionSummary: String? = null,
     val isDescribingScene: Boolean = false,
     val isListeningForVoiceCommand: Boolean = false,
+    val isFlashSupported: Boolean = false,
+    val isFlashEnabled: Boolean = false,
     val lastVoiceTranscript: String? = null
 )

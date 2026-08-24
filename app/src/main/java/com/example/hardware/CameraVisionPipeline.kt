@@ -59,6 +59,7 @@ class CameraVisionPipeline(
             val inferenceLatency = System.currentTimeMillis() - inferenceStartTime
             inferenceCount++
 
+            // Pass all raw detections to the downstream tracker
             val telemetry = PerformanceTelemetry(
                 cameraFps = currentCameraFps,
                 inferenceFps = currentInferenceFps,

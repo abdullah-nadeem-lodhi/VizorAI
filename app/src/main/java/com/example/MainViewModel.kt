@@ -84,6 +84,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun toggleFlash() {
+        val nextFlash = !_guidanceState.value.isFlashEnabled
+        _guidanceState.update { it.copy(isFlashEnabled = nextFlash) }
+    }
+
+    fun setFlashSupported(supported: Boolean) {
+        _guidanceState.update { it.copy(isFlashSupported = supported) }
+    }
+
     fun toggleMute() {
         val nextMute = !_guidanceState.value.isAudioMuted
         _guidanceState.update { it.copy(isAudioMuted = nextMute) }
@@ -102,9 +111,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun startVoiceListening() {
-        if (!_guidanceState.value.isAudioMuted) {
-            audioHapticManager.speakText("Listening.", interrupt = false)
-        }
         voiceCommandManager.startListening()
     }
 
@@ -183,13 +189,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 return@launch
             }
 
-            // Determine highest active danger level across all tracked objects
-            val highestDangerLevel = trackedObjects
+            // Corridor Filtering for Guidance & Danger
+            val corridorObjects = trackedObjects.filter { 
+                com.example.domain.engine.WalkingCorridor.isDetectionInCorridor(it.rect) 
+            }
+
+            // Determine highest active danger level across corridor objects
+            val highestDangerLevel = corridorObjects
                 .maxByOrNull { it.dangerScore }
                 ?.dangerLevel ?: DangerLevel.INFORMATION
 
             // Evaluate next guidance alert according to priority queue & cooldowns
-            val alert = priorityEngine.evaluateNextAlert(trackedObjects)
+            val alert = priorityEngine.evaluateNextAlert(corridorObjects)
 
             if (alert != null) {
                 audioHapticManager.dispatchGuidanceAlert(alert, _guidanceState.value.isAudioMuted)
@@ -259,7 +270,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val currentObjects = _guidanceState.value.trackedObjects
             val telemetry = _guidanceState.value.telemetry
 
-            val pathResult = pathGuidanceEngine.evaluatePath(currentObjects, telemetry)
+            val corridorObjects = currentObjects.filter { com.example.domain.engine.WalkingCorridor.isDetectionInCorridor(it.rect) }
+            val pathResult = pathGuidanceEngine.evaluatePath(corridorObjects, telemetry)
 
             _guidanceState.update {
                 it.copy(

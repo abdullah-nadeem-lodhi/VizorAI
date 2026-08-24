@@ -32,6 +32,8 @@ class MainActivity : ComponentActivity() {
                         state = state,
                         onToggleGuidance = { viewModel.toggleGuidance() },
                         onToggleMute = { viewModel.toggleMute() },
+                        onToggleFlash = { viewModel.toggleFlash() },
+                        onFlashSupportChanged = { viewModel.setFlashSupported(it) },
                         onEmergencyStop = { viewModel.emergencyStopOrSilence() },
                         onDescribeSurroundings = { viewModel.describeSurroundings() },
                         onVoiceCommand = { viewModel.startVoiceListening() },

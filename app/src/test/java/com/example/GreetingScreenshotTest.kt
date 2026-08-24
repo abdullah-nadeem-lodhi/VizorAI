@@ -43,6 +43,8 @@ class GreetingScreenshotTest {
                     state = testState,
                     onToggleGuidance = {},
                     onToggleMute = {},
+                        onToggleFlash = {},
+                        onFlashSupportChanged = {},
                     onEmergencyStop = {},
                     onDescribeSurroundings = {},
                     onPipelineResult = { _, _ -> },
