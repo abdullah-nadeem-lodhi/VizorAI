@@ -1,0 +1,1 @@
+<annotation><filename>valid_img_2_aug_1.jpg</filename><size><width>300</width><height>300</height></size><object><name>person</name><bndbox><xmin>243</xmin><ymin>9</ymin><xmax>289</xmax><ymax>104</ymax></bndbox></object></annotation>

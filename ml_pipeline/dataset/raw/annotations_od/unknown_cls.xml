@@ -1,0 +1,17 @@
+<annotation>
+    <filename>unknown_cls.jpg</filename>
+    <size>
+        <width>300</width>
+        <height>300</height>
+        <depth>3</depth>
+    </size>
+    <object>
+        <name>spaceship</name>
+        <bndbox>
+            <xmin>10</xmin>
+            <ymin>10</ymin>
+            <xmax>50</xmax>
+            <ymax>50</ymax>
+        </bndbox>
+    </object>
+</annotation>

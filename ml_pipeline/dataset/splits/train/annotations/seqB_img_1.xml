@@ -1,0 +1,17 @@
+<annotation>
+    <filename>seqB_img_1.jpg</filename>
+    <size>
+        <width>300</width>
+        <height>300</height>
+        <depth>3</depth>
+    </size>
+    <object>
+        <name>table</name>
+        <bndbox>
+            <xmin>10</xmin>
+            <ymin>10</ymin>
+            <xmax>100</xmax>
+            <ymax>100</ymax>
+        </bndbox>
+    </object>
+</annotation>

@@ -1,0 +1,37 @@
+# VizorAI Vision Taxonomy
+# Separates discrete Object Detection from continuous Geometry/Segmentation
+
+# Object Detection Classes (Bounding Boxes)
+# Used for discrete items, obstacles, and portals
+object_detection:
+  - person
+  - chair
+  - table
+  - desk
+  - bench
+  - sofa
+  - backpack
+  - bag
+  - bottle
+  - cup
+  - bicycle
+  - motorcycle
+  - car
+  - bus
+  - traffic_sign
+  - plant
+  - trash_bin
+  - door
+  - elevator
+  - railing
+  - pole
+  - curb
+  - obstacle
+
+# Geometry / Segmentation Classes (Polygon Masks / Depth)
+# Used for continuous surfaces, elevation changes, and negative space
+segmentation:
+  - wall
+  - stairs
+  - walkable_path
+  - drop/step regions

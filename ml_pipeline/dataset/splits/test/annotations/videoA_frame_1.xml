@@ -1,0 +1,17 @@
+<annotation>
+    <filename>videoA_frame_1.jpg</filename>
+    <size>
+        <width>300</width>
+        <height>300</height>
+        <depth>3</depth>
+    </size>
+    <object>
+        <name>door</name>
+        <bndbox>
+            <xmin>20</xmin>
+            <ymin>20</ymin>
+            <xmax>80</xmax>
+            <ymax>200</ymax>
+        </bndbox>
+    </object>
+</annotation>
