@@ -1,0 +1,6 @@
+{
+  "name": "AI Camera Guide",
+  "description": "Real-time accessible camera guidance, obstacle detection, and spatial danger alerts for visually impaired users.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

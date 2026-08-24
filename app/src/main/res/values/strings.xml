@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">AI Camera Guide</string>
+    <string name="title_guidance">AI Camera Guide</string>
+    <string name="btn_start_guidance">Start Camera Guidance</string>
+    <string name="btn_stop_guidance">Stop Camera Guidance</string>
+    <string name="btn_silence">Silence / Mute Audio</string>
+    <string name="btn_unmute">Unmute Audio</string>
+    <string name="btn_describe_scene">Describe Surroundings</string>
+    <string name="status_inactive">Guidance Stopped. Tap below to start.</string>
+    <string name="status_active">Guidance Active. Point camera forward.</string>
+    <string name="status_muted">Audio Muted. Haptics still active.</string>
+    <string name="safety_disclaimer">Experimental mobility assistance prototype. Not a cane replacement.</string>
+    <string name="permission_camera_rationale">Camera access is required for real-time obstacle and hazard detection.</string>
+    <string name="permission_grant_camera">Grant Camera Permission</string>
+</resources>
